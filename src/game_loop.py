@@ -3,6 +3,7 @@ import pygame
 from grid import Grid
 from time import sleep
 from player import Player
+from entity import Entity
 from keys import get_dir
 from event_handler import add_event
 # settings  _events[key] = fn
@@ -28,16 +29,25 @@ def redraw(win, entities):
     pygame.display.update()
 
 
-def move(grid, entity, new_pos: tuple[int,int]):
-  x,y = new_pos
-  grid_space = grid.get(x, y)
-  if grid_space == 0:
-    grid.set(x,y, entity)
-  
+def move(grid, player: Entity, direction : tuple[int,int]):
+# get current position
+  cx,cy = player.get_pos()
+  # get new direction
+  dx, dy = direction
+  # calculate new postion
+  nx = cx + dx
+  ny = cy + dy
+  # try to set new pos
+  grid.set((nx,ny), player)
+    
 def game_loop(entities):
   global game_state
   player = entities[0]
   while game_state:
+    # dt = clock.tick(fps) / 1000
+    update(entities, grid=grid)
+    redraw(win, entities)
+    clock.tick(fps)
     for ev in pygame.event.get():
       # print(event)
       if ev.type == pygame.QUIT:
@@ -45,31 +55,22 @@ def game_loop(entities):
       if ev.type == pygame.KEYDOWN:
         if ev.key == pygame.K_ESCAPE or ev.key == pygame.K_q:
           game_state = None
-        direction = get_dir(ev)
-        x,y = player.get_pos()
-        if direction == 'up':
-          y = player.y - 1
-        if direction == 'down':
-          y = player.y + 1
-        if direction == 'left':
-          x = player.x - 1
-        if direction == 'right':
-          x = player.x + 1
-        # try to set new pos
-        grid.set((x,y), player)
-    
-    dt = clock.tick(fps) / 1000
-    update(entities, grid=grid)
-    redraw(win, entities)
-    clock.tick(fps)
+        direction = get_dir(ev.key)
+        if direction:
+          move(grid, player, direction)
+        
   pygame.quit()
 
 game_state = True
 clock = pygame.time.Clock()
 win = pygame.display.set_mode((width, height))
-
 # entities
 size = 50
 grid = Grid(height, width, size)
-entities.append(Player(0,0,size,size,(0,255,255)))
+entities.append(Player(0,0,size,(0,255,255)))
+entities.append(Entity(0,2,size,(0,255,10)))
+entities[1].name = 'pepe'
+# grid
+for e in entities:
+  grid.set(e.get_pos(), e)
 game_loop(entities)

@@ -6,19 +6,16 @@ DOWN = 'down'
 LEFT = 'left'
 RIGHT = 'right'
 
-def get_dir(ev):
-  # print(ev.key)
-  if ev.key == K_LEFT or ev.key == K_a:
-    # dispatch('left')
-    return LEFT
-  if ev.key == K_RIGHT or ev.key == K_d:
-    # dispatch('right')
-    return RIGHT
-  if ev.key == K_UP or ev.key == K_w:
-    # dispatch('up')
-    return UP
-  if ev.key == K_DOWN or ev.key == K_s:
-    # dispatch('down')
-    return DOWN
-  if ev.key == K_ESCAPE or ev.key == K_q:
-    dispatch('quit')
+def get_dir(key_down_event) -> tuple[int,int] | None:
+  dx, dy = 0, 0
+  if key_down_event in [K_LEFT, K_a]:
+    dx = -1
+  if key_down_event in [K_RIGHT, K_d]:
+    dx = 1
+  if key_down_event in [K_UP, K_w]:
+    dy = -1
+  if key_down_event in [K_DOWN, K_s]:
+    dy = 1
+  if dx == 0 and dy == 0:
+    return None
+  return dx, dy
