@@ -10,16 +10,16 @@ class Grid():
     self.row = floor(width / size)
     self.col = floor(height / size)
     self.grid = [[0 for _ in range(self.col)] for _ in range(self.row)]
-    print('rows:', self.row)
-    print('cols:', self.col)
-    # print(self.grid)
+    print('grid:', self.row, 'x', self.col)
 
   def _clamp(self, x, y):
-    x = x if x >= 0 else len(self.grid)-1
+    # not greater than size of the row, or less than 0
+    x = x if x >= 0 else len(self.grid)-1 
     x = x if x < len(self.grid) else 0
+    # not greater than size of the col, or less than 0
     y = y if y >= 0 else len(self.grid[x])-1
     y = y if y < len(self.grid[x]) else 0
-    return x,y
+    return x, y
 
   def get(self, x: int, y: int):
     x, y  = self._clamp(int(x), int(y))
@@ -39,7 +39,6 @@ class Grid():
     # if entity is in the place, combat!
     if isinstance(next_cell, Entity):
       print('combat!')
-      pass
 
   def draw(self, win):
     for y in range(0, self.col):

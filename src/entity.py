@@ -1,4 +1,5 @@
-from pygame import draw
+from pygame import draw, font
+
 
 # display related 
 class Entity():
@@ -14,11 +15,17 @@ class Entity():
 
   def draw(self, win):
     draw.rect(win, self.color, self.rect)
+    # fnt = font.Font(None, 25)
+    # text = fnt.render(self.name, False, (0, 0, 0))
+    # win.blit(text, self.rect)
+  
   def set_pos(self, x: int, y: int):
     self.x = x
     self.y = y
+
   def get_pos(self):
     return self.x, self.y
+
   def update(self, **kwargs):
     x = self.x * self.width
     y = self.y * self.height

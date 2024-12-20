@@ -43,10 +43,12 @@ def move(grid, player: Entity, direction : tuple[int,int]):
 def game_loop(entities):
   global game_state
   player = entities[0]
+  # update and draw first frame
+  update(entities, grid=grid)
+  redraw(win, entities)
+  # start the game loop
   while game_state:
     # dt = clock.tick(fps) / 1000
-    update(entities, grid=grid)
-    redraw(win, entities)
     clock.tick(fps)
     for ev in pygame.event.get():
       # print(event)
@@ -58,6 +60,10 @@ def game_loop(entities):
         direction = get_dir(ev.key)
         if direction:
           move(grid, player, direction)
+        # at every key press (which is a player action)
+        # advance one turn
+        update(entities, grid=grid)
+        redraw(win, entities)
         
   pygame.quit()
 
